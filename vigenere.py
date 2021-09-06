@@ -2,13 +2,15 @@
 import argparse
 
 def cryptor(texte, clef):
-
+    # Encript text using vigenere cypher
     code = ""
     while len(texte) > len(clef):
-        clef+=clef
+         # Need to make sure encryption key is long enough
+         clef+=clef
 
     for i in range(len(texte)):
-    
+        
+        # Making the script case sensitive
         if texte[i].isupper():
             lettre = ord(texte[i])-65
         else:
@@ -16,6 +18,7 @@ def cryptor(texte, clef):
         crypto = ord(clef[i])-65
         chiffre = lettre + crypto
         
+        # Same as before
         if texte[i].isupper():
             code+=chr(chiffre%26+65)
         else:
@@ -24,13 +27,15 @@ def cryptor(texte, clef):
     return code
 
 def decryptor(code, clef):
-    
+    # Decrypt text using vigenere cypher
     texte = ""
     while len(code) > len(clef):
+        # Need to make sure encryption key is long enough
         clef+=clef
 
     for i in range(len(code)):
-
+        
+        # Making the script case sensitive
         if code[i].isupper():
             lettre = ord(code[i])-65
         else:
@@ -38,6 +43,7 @@ def decryptor(code, clef):
         crypto = ord(clef[i])-65
         dechiffre = lettre - crypto
 
+        # Same as before
         if code[i].isupper():
             texte+=chr(dechiffre%26+65)
         else:
@@ -46,25 +52,37 @@ def decryptor(code, clef):
     return texte
 
 if __name__ == "__main__":
+
+    # Argparse ain't that hard to use
+    # You just need to initialize the ArgumentParser
+    # You can use the data in the argument later 
     parser = argparse.ArgumentParser()
+
+    # Then initialize the arguments
     parser.add_argument("--texte", type=str)
     parser.add_argument("--code", type=str)
     parser.add_argument("--key", type=str)
 
+    # and then parse it
     args = parser.parse_args()
 
+    # You can use the data in the argument later
+    # you just have to use <nameOfTheVariable>.<nameOfTheArgument>
     if args:
+        # If arguments ars set then run once with the data in the args
         if args.texte and args.code:
             print("This ain't good")
-        elif args.texte:
+        elif args.texte and args.key:
             code = cryptor(args.texte, args.key)
             print(code)
-        elif args.code:
+        elif args.code and args.key:
             texte = decryptor(args.code, args.key)
             print(texte)
         else:
             print("This ain't good")
+
     else:
+        # Else just ask the user if he wants to encrypt decrypt or exit
         end = False
 
         while end == False:
