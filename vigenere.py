@@ -12,17 +12,9 @@ def cryptor(texte, clef):
         
         # Making the script case sensitive
         if texte[i].isupper():
-            lettre = ord(texte[i])-65
+            code+=chr(((ord(texte[i])-65)+(ord(clef[i])-65))%26+65)
         else:
-            lettre = ord(texte[i])-97
-        crypto = ord(clef[i])-65
-        chiffre = lettre + crypto
-        
-        # Same as before
-        if texte[i].isupper():
-            code+=chr(chiffre%26+65)
-        else:
-            code+=chr(chiffre%26+97)
+            code+=chr(((ord(texte[i])-97)+(ord(clef[i])-65))%26+97)
 
     return code
 
@@ -34,20 +26,12 @@ def decryptor(code, clef):
         clef+=clef
 
     for i in range(len(code)):
-        
-        # Making the script case sensitive
-        if code[i].isupper():
-            lettre = ord(code[i])-65
-        else:
-            lettre = ord(code[i])-97
-        crypto = ord(clef[i])-65
-        dechiffre = lettre - crypto
 
-        # Same as before
-        if code[i].isupper():
-            texte+=chr(dechiffre%26+65)
+        # Making the script case sensitive
+        if texte[i].isupper():
+            texte+=chr(((ord(code[i])-65)-(ord(clef[i])-65))%26+65)
         else:
-            texte+=chr(dechiffre%26+97)
+            texte+=chr(((ord(code[i])-97)-(ord(clef[i])-65))%26+97)
 
     return texte
 
@@ -68,18 +52,16 @@ if __name__ == "__main__":
 
     # You can use the data in the argument later
     # you just have to use <nameOfTheVariable>.<nameOfTheArgument>
-    if args:
-        # If arguments ars set then run once with the data in the args
-        if args.texte and args.code:
-            print("This ain't good")
-        elif args.texte and args.key:
-            code = cryptor(args.texte, args.key)
-            print(code)
-        elif args.code and args.key:
-            texte = decryptor(args.code, args.key)
-            print(texte)
-        else:
-            print("This ain't good")
+        
+    # If arguments ars set then run once with the data in the args
+    if args.texte and args.code:
+        print("This ain't good")
+    elif args.texte and args.key:
+        code = cryptor(args.texte, args.key)
+        print(code)
+    elif args.code and args.key:
+        texte = decryptor(args.code, args.key)
+        print(texte)
 
     else:
         # Else just ask the user if he wants to encrypt decrypt or exit
