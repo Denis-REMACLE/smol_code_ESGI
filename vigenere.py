@@ -12,9 +12,9 @@ def cryptor(texte, clef):
         
         # Making the script case sensitive
         if texte[i].isupper():
-            code+=chr(((ord(texte[i])-65)+(ord(clef[i])-65))%26+65)
+            code+=chr(((ord(texte[i])-65)+(ord(clef[i])-97))%26+65)
         else:
-            code+=chr(((ord(texte[i])-97)+(ord(clef[i])-65))%26+97)
+            code+=chr(((ord(texte[i])-97)+(ord(clef[i])-97))%26+97)
 
     return code
 
@@ -29,9 +29,9 @@ def decryptor(code, clef):
 
         # Making the script case sensitive
         if texte[i].isupper():
-            texte+=chr(((ord(code[i])-65)-(ord(clef[i])-65))%26+65)
+            texte+=chr(((ord(code[i])-65)-(ord(clef[i])-97))%26+65)
         else:
-            texte+=chr(((ord(code[i])-97)-(ord(clef[i])-65))%26+97)
+            texte+=chr(((ord(code[i])-97)-(ord(clef[i])-97))%26+97)
 
     return texte
 
@@ -68,26 +68,21 @@ if __name__ == "__main__":
         end = False
 
         while end == False:
-            print("What would you like to do ? (E)ncrypt, (D)ecrypt or E(x)it")
-            reponse = input()
+            reponse = input("What would you like to do ? (E)ncrypt, (D)ecrypt or E(x)it : ")
             if reponse == "x" or reponse == "X":
                 end = True
                 continue
             elif reponse == "e" or reponse == "E":
-                print("You chose to encrypt data")
-                print("Please provide the data")
-                texte = input()
-                print("Please Provide the key")
-                clef = input()
-                code = cryptor(texte, clef)
+                texte = input("You chose to encrypt data\nPlease provide the data : ")
+                clef = input("Please provide the key : ")
+                bloc = int(input("Please provide the bloc size : "))
+                code = cryptor(texte, clef.lower(), bloc)
                 print("Encryped data looks like : " + code)
             elif reponse == "d" or reponse == "D":
-                print("You chose to decrypt data")
-                print("Please provide the data")
-                code = input()
-                print("Please provide the key")
-                clef = input()
-                texte = decryptor(code, clef)
+                code = input("You chose to decrypt data\nPlease provide the data : ")
+                clef = input("Please provide the key : ")
+                bloc = int(input("Please provide the block size : "))
+                texte = decryptor(code, clef.lower(), bloc)
                 print("Decrypted data looks like : " + texte)
             else:
                 print("That ain't good")
