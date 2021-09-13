@@ -13,8 +13,10 @@ def cryptor(texte, clef):
         # Making the script case sensitive
         if texte[i].isupper():
             code+=chr(((ord(texte[i])-65)+(ord(clef[i])-97))%26+65)
-        else:
+        elif texte[i].islower():
             code+=chr(((ord(texte[i])-97)+(ord(clef[i])-97))%26+97)
+        else:
+            code+=texte[i]
 
     return code
 
@@ -28,10 +30,12 @@ def decryptor(code, clef):
     for i in range(len(code)):
 
         # Making the script case sensitive
-        if texte[i].isupper():
+        if code[i].isupper():
             texte+=chr(((ord(code[i])-65)-(ord(clef[i])-97))%26+65)
-        else:
+        elif code[i].islower():
             texte+=chr(((ord(code[i])-97)-(ord(clef[i])-97))%26+97)
+        else:
+            texte+=code[i]
 
     return texte
 
@@ -75,14 +79,12 @@ if __name__ == "__main__":
             elif reponse == "e" or reponse == "E":
                 texte = input("You chose to encrypt data\nPlease provide the data : ")
                 clef = input("Please provide the key : ")
-                bloc = int(input("Please provide the bloc size : "))
-                code = cryptor(texte, clef.lower(), bloc)
+                code = cryptor(texte, clef.lower())
                 print("Encryped data looks like : " + code)
             elif reponse == "d" or reponse == "D":
                 code = input("You chose to decrypt data\nPlease provide the data : ")
                 clef = input("Please provide the key : ")
-                bloc = int(input("Please provide the block size : "))
-                texte = decryptor(code, clef.lower(), bloc)
+                texte = decryptor(code, clef.lower())
                 print("Decrypted data looks like : " + texte)
             else:
                 print("That ain't good")
