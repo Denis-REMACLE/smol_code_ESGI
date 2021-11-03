@@ -66,7 +66,7 @@ function group_create
 	# Créer un groupe commun pour les droits sur les cheatsheets
 	groupadd commun
 	chgrp -Rv commun /opt/COMMUN
-	chmod 2770 /opt/COMMUN/
+	chmod -Rv 2770 /opt/COMMUN/
 }
 
 function config_linking
