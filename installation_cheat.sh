@@ -54,8 +54,8 @@ users=($(grep '/bin/bash' /etc/passwd | awk -F : '{print $1}'))
 for i in "${users[@]}"; do
 	if [ $i != "root" ];
 	then
-		usermod -aG commun $1
-		usermod -aG sudo $1
+		usermod -a -G commun $1
+		usermod -a -G sudo $1
 		mkdir /home/$i/.config
 		ln -s /opt/COMMUN/cheat /home/$i/.config/cheat
 
