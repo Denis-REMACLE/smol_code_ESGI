@@ -88,6 +88,7 @@ function config_linking
 			usermod -a -G sudo $i
 			mkdir /home/$i/.config
 			ln -s /opt/COMMUN/cheat /home/$i/.config/cheat
+			chown -R $i /home/$i/.config
 
 		fi
 	done
