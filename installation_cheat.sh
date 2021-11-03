@@ -1,4 +1,6 @@
-#!/etc/bin sh
+#!/bin/bash
+set -e
+set -x
 clear
 
 # Téléchargement de cheat
