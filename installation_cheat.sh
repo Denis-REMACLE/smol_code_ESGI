@@ -67,6 +67,7 @@ function group_create
 	groupadd commun
 	chgrp -Rv commun /opt/COMMUN
 	chmod -Rv 2770 /opt/COMMUN/
+	umask 007 /opt/COMMUN/
 }
 
 function config_linking
