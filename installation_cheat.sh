@@ -83,8 +83,8 @@ function config_linking
 	for i in "${users[@]}"; do
 		if [ $i != "root" ];
 		then
-			usermod -a -G commun $1
-			usermod -a -G sudo $1
+			usermod -a -G commun $i
+			usermod -a -G sudo $i
 			mkdir /home/$i/.config
 			ln -s /opt/COMMUN/cheat /home/$i/.config/cheat
 
