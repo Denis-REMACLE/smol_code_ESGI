@@ -126,6 +126,23 @@ function group_create
 	chmod -Rv 2770 /opt/COMMUN/
 }
 
+function Password
+{
+        users=($(grep '/bin/bash' /etc/passwd | awk -F : '{print $1}'))
+ 
+        # Dans une boucle créer le dossier .config faire le lien symbolique et un ajouts aux groupes
+        # Pour chaque utilisateurs sauf root
+        for user in "${users[@]}"; do
+                if [ $user != "root" ];
+                then
+                        pass=($(< /dev/urandom tr -dc 'A-Z-a-z-0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c${1:-6}))>
+                        #echo -e "$pass\n$pass" | passwd $user
+                        echo $user:$pass >> mot_de_passe.txt #ecriture dans un ficher 
+
+                fi
+        done
+}
+
 function config_linking
 {
 	# Créer les liens symboliques pour les utilisateurs
