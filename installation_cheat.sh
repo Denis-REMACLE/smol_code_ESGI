@@ -73,7 +73,7 @@ function make_root_bashrc
 {
 	echo "umask 007" >> /root/.bashrc
 	cat >> /root/.bashrc << EOF
-	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1='\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m'
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
