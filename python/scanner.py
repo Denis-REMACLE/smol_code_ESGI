@@ -72,6 +72,7 @@ elif OS == "Windows":
             usable_ip = usable_ip.strip(" ")
             print("[%i] : \t%s" %(number, usable_ip))
             choices[str(number)] = usable_ip
+            number+=1
 
     os.remove("ipv4use.txt")
     userChoice = str(input("\nPlease choose the ip you want to target : "))
