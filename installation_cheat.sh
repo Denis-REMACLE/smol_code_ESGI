@@ -23,7 +23,7 @@ function uninstall_cheat
 	rm -f /usr/local/bin/cheat
 }
 
-function install_git
+function install_utils
 {
 	# Installer git
 	apt install git -y
@@ -61,13 +61,28 @@ function config_dir_making
 	mkdir /etc/skel/.config/
 }
 
+function make_root_bashrc
+{
+	sed "s;PS1=* ; PS1='\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m';" /root/.bashrc
+	echo "alias ll='ls -rtl" >> /root/.bashrc
+	echo "alias la='ls -lsa" >> /root/.bashrc
+	echo "alias rm='rm -Iv --preserve-root" >> /root/.bashrc
+}
+
+function make_skel_bashrc
+{
+	sed "s;PS1=* ; PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m';" /etc/skel/.bashrc
+	echo "alias ll='ls -rtl" >> /etc/skel/.bashrc
+	echo "alias la='ls -lsa" >> /etc/skel/.bashrc
+	echo "alias rm='rm -Iv --preserve-root" >> /etc/skel/.bashrc
+}
+
 function group_create
 {
 	# Créer un groupe commun pour les droits sur les cheatsheets
 	groupadd commun
 	chgrp -Rv commun /opt/COMMUN
 	chmod -Rv 2770 /opt/COMMUN/
-	umask 007 /opt/COMMUN/cheat/cheatsheets
 }
 
 function config_linking
@@ -81,25 +96,43 @@ function config_linking
 
 	# Dans une boucle créer le dossier .config faire le lien symbolique et un ajouts aux groupes
 	# Pour chaque utilisateurs sauf root
-	for i in "${users[@]}"; do
+	for user in "${users[@]}"; do
 		if [ $i != "root" ];
 		then
-			usermod -a -G commun $i
-			usermod -a -G sudo $i
-			mkdir /home/$i/.config
-			ln -s /opt/COMMUN/cheat /home/$i/.config/cheat
-			chown -R $i /home/$i/.config
+			usermod -a -G commun $user
+			usermod -a -G sudo $user
+			mkdir /home/$user/.config
+			ln -s /opt/COMMUN/cheat /home/$user/.config/cheat
+			chown -R $i /home/$user/.config
 
 		fi
 	done
+
+	umask 007 /opt/COMMUN/cheat/cheatsheets
 }
 
+function create_users
+{
+	for user in "$@"; do
+		useradd -G sudo, commun -s /bin/bash --create-home $user
+	done
+}
+
+function create_user_UID_GID
+{
+	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
+}
+
+install_utils
 install_cheat
-install_git
+
 create_dirs
 configure_cheat
 install_cheatsheets
 config_dir_making
+
 group_create
 config_linking
-
+create_users denis
+create_user_UID_GID
+umask 007
