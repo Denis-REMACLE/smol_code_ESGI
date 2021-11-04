@@ -33,6 +33,8 @@ function uninstall_cheat
 	rm -f /usr/local/bin/cheat
 }
 
+
+
 function install_utils
 {
 	# Installer git
@@ -61,7 +63,7 @@ function install_cheatsheets
 	git clone https://github.com/cheat/cheatsheets.git
 
 	# Les déplacer dans le dossier créé précédement
-	mv -v cheatsheets/* /opt/COMMUN/cheat/cheatsheets/community
+	\mv -v cheatsheets/[a-Z]* /opt/COMMUN/cheat/cheatsheets/community
 }
 
 function config_dir_making
@@ -77,7 +79,8 @@ function make_root_bashrc
 {
 	echo "umask 007" >> /root/.bashrc
 	cat >> /root/.bashrc << EOF
-	export PS1='\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1=
+	+'\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m'
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -121,9 +124,9 @@ EOF
 function group_create
 {
 	# Créer un groupe commun pour les droits sur les cheatsheets
-	groupadd commun
+	groupadd -g 10000 commun
 	chgrp -Rv commun /opt/COMMUN
-	chmod -Rv 2770 /opt/COMMUN/
+	chmod -Rv 2770 /opt/COMMUN/cheat/cheatsheets/personal
 }
 
 function config_linking
@@ -145,19 +148,14 @@ function config_linking
 			mkdir /home/$user/.config
 			ln -s /opt/COMMUN/cheat /home/$user/.config/cheat
 			chown -R $i /home/$user/.config
-
 		fi
 	done
-
-	umask 007 /opt/COMMUN/cheat/cheatsheets
 }
 
 function create_users
 {
-	for user in "$@"; do
-		useradd -G sudo, commun -s /bin/bash --create-home $user
-		make_user_bashrc $user
-	done
+	useradd -G sudo, commun -s /bin/bash --create-home $1
+	make_user_bashrc $1
 }
 
 function create_user_UID_GID
@@ -165,14 +163,64 @@ function create_user_UID_GID
 	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
 	echo -e $4"\n"$4 | passwd $1
 }
-
+echo "Installing utils"
+echo "__________________________"
 install_utils
+sleep 20
+clear
+
+echo "Installing cheat"
+echo "__________________________"
 install_cheat
+sleep 20
+clear
+
+echo "Creating directories"
+echo "__________________________"
 create_dirs
-configure_cheat
+sleep 20
+
+cclear
+
+echo "Configuring cheat"
+echo "__________________________"
+onfigure_cheat
+sleep 20
+clear
+
+echo "Installing cheatsheets"
+echo "__________________________"
 install_cheatsheets
+sleep 20
+clear
+
+echo "Making .config directories"
+echo "__________________________"
 config_dir_making
+sleep 20
+clear
+
+echo "Creating group commun"
+echo "__________________________"
 group_create
+sleep 20
+clear
+
+echo "Linking configurations"
+echo "__________________________"
 config_linking
-create_users denis
+sleep 20
+clear
+if [$# -gt 0]; then
+	echo "Creating users"
+	echo "__________________________"
+	for user in "$@"; do
+		crate_users $user
+	done
+	sleep 20
+	clear
+fi
+
+echo "Creating ESGI user"
+echo "__________________________"
 create_user_UID_GID esgi 1000 1000 Pa55w.rd
