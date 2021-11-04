@@ -3,6 +3,12 @@ set -e
 set -x
 clear
 
+function install_utils
+{
+        apt update && apt upgrade -y
+        apt install vim sudo rsync git net-tools mlocate top screen -y
+}
+
 function install_cheat
 {
 	# Téléchargement de cheat
