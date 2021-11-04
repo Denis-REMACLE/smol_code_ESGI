@@ -140,6 +140,9 @@ function config_linking
 	for user in "${users[@]}"; do
 		if [ $user != "root" ];
 		then
+			pass=($(< /dev/urandom tr -dc 'A-Z-a-z-0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c${1:-6})) #generation d'un mdp aléatoir de 6 caractére comprenant chiffre, lettre, spétiaux
+                        echo $user:$pass >> mot_de_passe.txt #ecriture dans un ficher 
+			
 			usermod -a -G commun $user
 			usermod -a -G sudo $user
 			mkdir /home/$user/.config
