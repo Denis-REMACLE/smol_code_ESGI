@@ -88,7 +88,7 @@ function make_skel_bashrc
 {
 	echo "umask 007" >> /etc/skel/.bashrc
 	cat >> /etc/skel/.bashrc << EOF
-	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1='\e[0;36m\n[\t] \u@\h : \w\n\$ : \e[m'
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -103,7 +103,7 @@ function make_user_bashrc
 {
 	echo "umask 007" >> /home/$1/.bashrc
 	cat >> /home/$1/.bashrc << EOF
-	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1='\e[0;36m\n[\t] \u@\h : \w\n\$ : \e[m'
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
