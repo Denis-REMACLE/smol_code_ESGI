@@ -42,10 +42,10 @@ if OS == "Linux":
 
     while userChoice not in choices:
         print("\nThis is not quite right !")
-        userChoice = str(input("\nPlease choose the AP you want to target : "))
+        userChoice = str(input("\nPlease choose the ip you want to target : "))
 
     target = ipaddress.IPv4Network(choices[userChoice])
-    print(target.hostmask)
+    print(target)
 
 elif OS == "Windows":
 
@@ -60,13 +60,28 @@ elif OS == "Windows":
     print("\n Contenu du dossier \n")
     for i in range (len(list)):
         print(list[i])
-
+    
+    choices = {}
+    number = 0
     print("\n Voici vos adresses IP \n")
     os.system("findstr IPv4 ipconfig.txt > ipv4use.txt")
     with open("ipv4use.txt", "r") as ips:
         for ip in ips:
             usable_ip = ip.split(':')[1]
-            print(usable_ip)
+            usable_ip = usable_ip.strip("\n")
+            usable_ip = usable_ip.strip(" ")
+            print("[%i] : \t%s" %(number, usable_ip))
+            choices[str(number)] = usable_ip
+
+    os.remove("ipv4use.txt")
+    userChoice = str(input("\nPlease choose the ip you want to target : "))
+
+    while userChoice not in choices:
+        print("\nThis is not quite right !")
+        userChoice = str(input("\nPlease choose the ip you want to target : "))
+
+    target = ipaddress.IPv4Network(choices[userChoice])
+    print(target)
 
 else:
     print("Pas d'OS supporté")
