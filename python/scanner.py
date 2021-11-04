@@ -62,7 +62,11 @@ elif OS == "Windows":
         print(list[i])
 
     print("\n Voici vos adresses IP \n")
-    os.system("findstr IPv4 ipconfig.txt")
+    os.system("findstr IPv4 ipconfig.txt > ipv4use.txt")
+    with open("ipv4use.txt", "r") as ips:
+        for ip in ips:
+            usable_ip = ip.split(':')[1]
+            print(usable_ip)
 
 else:
     print("Pas d'OS supporté")
