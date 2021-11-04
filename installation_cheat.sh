@@ -59,22 +59,50 @@ function config_dir_making
 	# Créer les dossier .config chez root et /etc/skel
 	mkdir /root/.config/
 	mkdir /etc/skel/.config/
+	make_root_bashrc
+	make_skel_bashrc
 }
 
 function make_root_bashrc
 {
-	sed "s;PS1=* ; PS1='\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m';" /root/.bashrc
-	echo "alias ll='ls -rtl" >> /root/.bashrc
-	echo "alias la='ls -lsa" >> /root/.bashrc
-	echo "alias rm='rm -Iv --preserve-root" >> /root/.bashrc
+	echo "umask 007" >> /root/.bashrc
+	cat >> /root/.bashrc << EOF
+	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	alias ll='ls -rtl'
+	alias la='ls -lsa'
+	alias rm='rm -Iv --preserve-root'
+	alias chown="chown -v --preserve-root"
+	alias chmod="chmod -v --preserve-root"
+	alias chgrp="chgrp -v --preserve-root"
+	EOF
 }
 
 function make_skel_bashrc
 {
-	sed "s;PS1=* ; PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m';" /etc/skel/.bashrc
-	echo "alias ll='ls -rtl" >> /etc/skel/.bashrc
-	echo "alias la='ls -lsa" >> /etc/skel/.bashrc
-	echo "alias rm='rm -Iv --preserve-root" >> /etc/skel/.bashrc
+	echo "umask 007" >> /etc/skel/.bashrc
+	cat >> /etc/skel/.bashrc << EOF
+	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	alias ll='ls -rtl'
+	alias la='ls -lsa'
+	alias rm='rm -Iv --preserve-root'
+	alias chown="chown -v --preserve-root"
+	alias chmod="chmod -v --preserve-root"
+	alias chgrp="chgrp -v --preserve-root"
+	EOF
+}
+
+function make_user_bashrc
+{
+	echo "umask 007" >> /home/$1/.bashrc
+	cat >> /home/$1/.bashrc << EOF
+	export PS1='\e[0;35m\n[\t] \u@\h : \w\n\$ : \e[m'
+	alias ll='ls -rtl'
+	alias la='ls -lsa'
+	alias rm='rm -Iv --preserve-root'
+	alias chown="chown -v --preserve-root"
+	alias chmod="chmod -v --preserve-root"
+	alias chgrp="chgrp -v --preserve-root"
+	EOF
 }
 
 function group_create
@@ -115,24 +143,24 @@ function create_users
 {
 	for user in "$@"; do
 		useradd -G sudo, commun -s /bin/bash --create-home $user
+		make_user_bashrc $user
 	done
 }
 
 function create_user_UID_GID
 {
 	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
+	echo -e $4"\n"$4 | passwd $1
 }
 
 install_utils
 install_cheat
-
 create_dirs
 configure_cheat
 install_cheatsheets
 config_dir_making
-
 group_create
 config_linking
 create_users denis
-create_user_UID_GID
+create_user_UID_GID esgi 1000 1000 Pa55w.rd
 umask 007
