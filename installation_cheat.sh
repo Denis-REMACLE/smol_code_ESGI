@@ -169,4 +169,3 @@ group_create
 config_linking
 create_users denis
 create_user_UID_GID esgi 1000 1000 Pa55w.rd
-umask 007
