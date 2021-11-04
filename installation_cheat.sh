@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Author : Denis REMACLE
+# 
+
 set -e
 set -x
 clear
@@ -134,7 +138,7 @@ function config_linking
 	# Dans une boucle créer le dossier .config faire le lien symbolique et un ajouts aux groupes
 	# Pour chaque utilisateurs sauf root
 	for user in "${users[@]}"; do
-		if [ $i != "root" ];
+		if [ $user != "root" ];
 		then
 			usermod -a -G commun $user
 			usermod -a -G sudo $user
