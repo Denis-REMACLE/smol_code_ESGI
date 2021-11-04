@@ -74,7 +74,7 @@ function make_root_bashrc
 	alias chown="chown -v --preserve-root"
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
-	EOF
+EOF
 }
 
 function make_skel_bashrc
@@ -88,7 +88,7 @@ function make_skel_bashrc
 	alias chown="chown -v --preserve-root"
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
-	EOF
+EOF
 }
 
 function make_user_bashrc
@@ -102,7 +102,7 @@ function make_user_bashrc
 	alias chown="chown -v --preserve-root"
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
-	EOF
+EOF
 }
 
 function group_create
