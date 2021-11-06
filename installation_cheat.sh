@@ -157,19 +157,14 @@ function create_users
 {
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
-	echo -e $password"\n"$password | passwd $1
+	yes $password | passwd $1
 
 }
-
-# function password_updator
-# {
-# 	cat passwords | chpasswd
-# }
 
 function create_user_UID_GID
 {
 	useradd -G sudo,commun -s /bin/bash --create-home -g $2 -u $3 $1
-	echo -e $4"\n"$4 | passwd $1
+	yes $4 | passwd $1
 }
 
 function banner_install
@@ -261,8 +256,8 @@ sleep 5
 clear
 
 
-# echo "Creating ESGI user"
-# echo "__________________________"
-# create_user_UID_GID esgi 1000 1000 Pa55w.rd
-# sleep 5
-# clear
+echo "Creating ESGI user"
+echo "__________________________"
+create_user_UID_GID esgi 10000 10000 Pa55w.rd
+sleep 5
+clear
