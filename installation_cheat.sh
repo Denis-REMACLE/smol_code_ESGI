@@ -10,7 +10,7 @@ clear
 function install_utils
 {
         apt update && apt upgrade -y
-        apt install vim sudo rsync git net-tools mlocate top screen -y
+        apt install vim sudo rsync git net-tools mlocate htop screen -y
 }
 
 function install_cheat
@@ -31,14 +31,6 @@ function install_cheat
 function uninstall_cheat
 {
 	rm -f /usr/local/bin/cheat
-}
-
-
-
-function install_utils
-{
-	# Installer git
-	apt install git -y
 }
 
 function create_dirs
@@ -63,7 +55,7 @@ function install_cheatsheets
 	git clone https://github.com/cheat/cheatsheets.git
 
 	# Les déplacer dans le dossier créé précédement
-	\mv -v cheatsheets/[a-Z]* /opt/COMMUN/cheat/cheatsheets/community
+	mv -v cheatsheets/* /opt/COMMUN/cheat/cheatsheets/community
 }
 
 function config_dir_making
@@ -79,8 +71,7 @@ function make_root_bashrc
 {
 	echo "umask 007" >> /root/.bashrc
 	cat >> /root/.bashrc << EOF
-	export PS1=
-	+'\e[0;31m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1="\[\033[38;5;1m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -95,7 +86,7 @@ function make_skel_bashrc
 {
 	echo "umask 007" >> /etc/skel/.bashrc
 	cat >> /etc/skel/.bashrc << EOF
-	export PS1='\e[0;36m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1="\[\033[38;5;14m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -110,7 +101,7 @@ function make_user_bashrc
 {
 	echo "umask 007" >> /home/$1/.bashrc
 	cat >> /home/$1/.bashrc << EOF
-	export PS1='\e[0;36m\n[\t] \u@\h : \w\n\$ : \e[m'
+	export PS1="\[\033[38;5;14m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -147,7 +138,8 @@ function config_linking
 			usermod -a -G sudo $user
 			mkdir /home/$user/.config
 			ln -s /opt/COMMUN/cheat /home/$user/.config/cheat
-			chown -R $i /home/$user/.config
+			chown -R $user /home/$user/.config
+			make_user_bashrc $user
 		fi
 	done
 }
@@ -156,19 +148,18 @@ function password_generator
 {
 	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
 	echo $1":"$password >> passwords
-	return $password
 }
 
 function create_users
 {
-	useradd -G sudo, commun -s /bin/bash --create-home $1
+	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
 	echo -e $password"\n"$password | passwd $1
 }
 
 function create_user_UID_GID
 {
-	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
+	useradd -G sudo,commun -s /bin/bash --create-home -g $2 -u $3 $1
 	echo -e $4"\n"$4 | passwd $1
 }
 
@@ -188,12 +179,11 @@ echo "Creating directories"
 echo "__________________________"
 create_dirs
 sleep 5
-
-cclear
+clear
 
 echo "Configuring cheat"
 echo "__________________________"
-onfigure_cheat
+configure_cheat
 sleep 5
 clear
 
@@ -221,11 +211,11 @@ config_linking
 sleep 5
 clear
 
-if [$# -gt 0]; then
+if [ $# -gt 0 ]; then
 	echo "Creating users"
 	echo "__________________________"
 	for user in "$@"; do
-		crate_users $user
+		create_users $user
 	done
 	sleep 5
 	clear
@@ -233,4 +223,8 @@ fi
 
 #echo "Creating ESGI user"
 #echo "__________________________"
+<<<<<<< HEAD
 #create_user_UID_GID esgi 1000 1000 Pa55w.rd
+=======
+#create_user_UID_GID esgi 1000 1000 Pa55w.rd
+>>>>>>> d58ae39a5c9fa49a8fcd75fc638155978f9dbff7
