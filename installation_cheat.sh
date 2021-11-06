@@ -33,14 +33,6 @@ function uninstall_cheat
 	rm -f /usr/local/bin/cheat
 }
 
-
-
-function install_utils
-{
-	# Installer git
-	apt install git -y
-}
-
 function create_dirs
 {
 	# Créer les dossiers pour la conf
