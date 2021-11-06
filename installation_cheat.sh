@@ -10,7 +10,7 @@ clear
 function install_utils
 {
         apt update && apt upgrade -y
-        apt install vim sudo rsync git net-tools mlocate top screen -y
+        apt install vim sudo rsync git net-tools mlocate htop screen -y
 }
 
 function install_cheat
