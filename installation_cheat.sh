@@ -216,7 +216,7 @@ if [ $# -gt 0 ]; then
 	echo "Creating users"
 	echo "__________________________"
 	for user in "$@"; do
-		crate_users $user
+		create_users $user
 	done
 	sleep 5
 	clear
