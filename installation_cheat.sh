@@ -36,8 +36,8 @@ function uninstall_cheat
 function create_dirs
 {
 	# Créer les dossiers pour la conf
-	mkdir -p /opt/COMMUN/cheat/cheatsheets/community
-	mkdir /opt/COMMUN/cheat/cheatsheets/personal
+	mkdir -vp /opt/COMMUN/cheat/cheatsheets/community
+	mkdir -v /opt/COMMUN/cheat/cheatsheets/personal
 }
 
 function configure_cheat
@@ -61,8 +61,8 @@ function install_cheatsheets
 function config_dir_making
 {
 	# Créer les dossier .config chez root et /etc/skel
-	mkdir /root/.config/
-	mkdir /etc/skel/.config/
+	mkdir -v /root/.config/
+	mkdir -v /etc/skel/.config/
 	make_root_bashrc
 	make_skel_bashrc
 }
@@ -126,8 +126,8 @@ function group_create
 function config_linking
 {
 	# Créer les liens symboliques pour les utilisateurs
-	ln -s /opt/COMMUN/cheat /root/.config/cheat
-	ln -s /opt/COMMUN/cheat /etc/skel/.config/cheat
+	ln -vs /opt/COMMUN/cheat /root/.config/cheat
+	ln -vs /opt/COMMUN/cheat /etc/skel/.config/cheat
 
 	# Récupérer une liste des utilisateur "legité
 	users=($(grep '/bin/bash' /etc/passwd | awk -F : '{print $1}'))
@@ -140,29 +140,31 @@ function config_linking
 			usermod -a -G commun $user
 			usermod -a -G sudo $user
 			mkdir /home/$user/.config
-			ln -s /opt/COMMUN/cheat /home/$user/.config/cheat
+			ln -vs /opt/COMMUN/cheat /home/$user/.config/cheat
 			chown -R $user /home/$user/.config
 			make_user_bashrc $user
 		fi
 	done
 }
 
-function password_generator
-{
-	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
-	echo $1":"$password >> passwords
-}
+# function password_generator
+# {
+# 	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
+# 	echo $1":"$password >> passwords
+# }
 
 function create_users
 {
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
+	echo -e "default\ndefault\n"| passwd $1
+
 }
 
-function password_updator
-{
-	cat passwords | chpasswd
-}
+# function password_updator
+# {
+# 	cat passwords | chpasswd
+# }
 
 function create_user_UID_GID
 {
@@ -177,7 +179,7 @@ function banner_install
 	echo "hostname | figlet" >> /etc/profile.d/mymotd.sh
 	echo "cat /etc/motd_for_sacking" >> /etc/profile.d/mymotd.sh
 	cat >> /etc/motd_for_sacking << EOF
-	
+
 Hello dear user,
 
 You may use this server responsibly and be mindful of the commands you may type or your will be sacked !
@@ -249,7 +251,7 @@ if [ $# -gt 0 ]; then
 	clear
 fi
 
-password_updator
+# password_updator
 
 echo "Installing motd"
 echo "__________________________"
