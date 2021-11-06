@@ -148,7 +148,6 @@ function password_generator
 {
 	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
 	echo $1":"$password >> passwords
-	return $password
 }
 
 function create_users
