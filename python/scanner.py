@@ -4,20 +4,16 @@ import platform
 import re
 import subprocess
 import ipaddr
+import socket
 
 if len(sys.argv) == 2 and sys.argv[1] == "-h":
     print("Ce programme va récupérer les info réseaux d'une machine Linux ou Windows et les sauvergarder sur un fichier puis ressorit les adresses IP présentes")
     exit()
 
 OS = platform.system()
-print("\n My os in my system is ",OS)
-
+print("OS on your system is ",OS)
+list_ports = [22, 80, 443]
 if OS == "Linux":
-
-    # Check for root privileges
-    if os.geteuid()!=0:
-        print("You need sudo for that")
-        exit()
 
     os.system("ip a > network.txt")
     path = subprocess.check_output("pwd").decode().strip()
@@ -64,16 +60,24 @@ if OS == "Linux":
             connected_hosts.append(host)
             print(str(host), "is Online")
     print()
-    for i in range(len(connected_hosts)):
-        nom_fichier = str(connected_hosts[i]).replace(".", "-")+"_scan"
-        print("scanning "+str(connected_hosts[i]))
-        os.system("nmap -sT "+str(connected_hosts[i])+" | grep 'open' > "+ nom_fichier)
-        print("Complete")
-        os.system("chmod 666 "+nom_fichier)
 
-
-
-
+    if "-s" in sys.argv:
+        for host in connected_hosts:
+            nom_fichier = str(host).replace(".", "-")+"_scan"
+            print("scanning "+ str(host))
+            os.system("cat scanning "+ str(host) +" >> "+ str(sys.argv[output+1]))
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            for port in list_ports:
+                test = sock.connect(host, port)
+                if test == 0:
+                    if "-o" in sys.argv:
+                        output = sys.argv.index("-o")
+                        os.system("cat "+ nom_fichier +" >> "+ str(sys.argv[output+1]))
+                    else:
+                        os.system("cat "+nom_fichier)
+                        os.remove(nom_fichier)
+            print("Complete")
+            
 
 elif OS == "Windows":
 

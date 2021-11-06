@@ -152,10 +152,18 @@ function config_linking
 	done
 }
 
+function password_generator
+{
+	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
+	echo $1":"$password >> passwords
+	return $password
+}
+
 function create_users
 {
 	useradd -G sudo, commun -s /bin/bash --create-home $1
-	make_user_bashrc $1
+	password_generator $1
+	echo -e $password"\n"$password | passwd $1
 }
 
 function create_user_UID_GID
@@ -163,61 +171,63 @@ function create_user_UID_GID
 	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
 	echo -e $4"\n"$4 | passwd $1
 }
+
 echo "Installing utils"
 echo "__________________________"
 install_utils
-sleep 20
+sleep 5
 clear
 
 echo "Installing cheat"
 echo "__________________________"
 install_cheat
-sleep 20
+sleep 5
 clear
 
 echo "Creating directories"
 echo "__________________________"
 create_dirs
-sleep 20
+sleep 5
 
 cclear
 
 echo "Configuring cheat"
 echo "__________________________"
 onfigure_cheat
-sleep 20
+sleep 5
 clear
 
 echo "Installing cheatsheets"
 echo "__________________________"
 install_cheatsheets
-sleep 20
+sleep 5
 clear
 
 echo "Making .config directories"
 echo "__________________________"
 config_dir_making
-sleep 20
+sleep 5
 clear
 
 echo "Creating group commun"
 echo "__________________________"
 group_create
-sleep 20
+sleep 5
 clear
 
 echo "Linking configurations"
 echo "__________________________"
 config_linking
-sleep 20
+sleep 5
 clear
+
 if [$# -gt 0]; then
 	echo "Creating users"
 	echo "__________________________"
 	for user in "$@"; do
 		crate_users $user
 	done
-	sleep 20
+	sleep 5
 	clear
 fi
 
