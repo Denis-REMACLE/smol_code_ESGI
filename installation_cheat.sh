@@ -161,18 +161,6 @@ function create_users
 
 }
 
-function create_user_UID_GID_with_sudo
-{
-	useradd -G sudo,commun -s /bin/bash --create-home -g $2 -u $3 $1
-	passwd
-}
-
-function create_user_UID_GID
-{
-	useradd -G commun -s /bin/bash --create-home -g $2 -u $3 $1
-	passwd
-}
-
 function banner_install
 {
 	echo "" > /etc/motd
@@ -249,35 +237,7 @@ banner_install
 sleep 5
 clear
 
-if [ $# -gt 0 ] && ( [ $1 == "-i" ] || [ $1 == "--interactive" ]; then
-	echo "Creating custom user"
-	echo "__________________________"
-	echo "Please input the number of users you want to create"
-	input number
-	for i in {0..$number..1}
-		echo "Please name the user"
-		input name
-		echo "Please give the uid"
-		input uid
-		echo "Please give the gid"
-		input gid
-		echo "Do you want the user to be able to use sudo : (y)es / (n)o"
-		input sudo
-		
-		while [ $sudo  != "yes"] ||  [ $sudo != "y" ] ||  [ $sudo != "n" ] ||  [ $sudo != "no" ]
-		do
-			echo "Do you want the user to be able to use sudo : (y)es / (n)o"
-			input sudo
-		done
-
-		if [ $sudo == "yes" ] ||  [ $sudo == "y" ]; then
-			create_user_UID_GID_with_sudo $uid $gid $name
-		else
-			create_user_UID_GID $uid $gid $name
-		
-		sleep 5
-		clear
-else if  [ $# -gt 0 ]; then
+if  [ $# -gt 0 ]; then
 	echo "Creating users"
 	echo "__________________________"
 	for user in "$@"; do
