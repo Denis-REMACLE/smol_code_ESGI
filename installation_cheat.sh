@@ -10,7 +10,7 @@ clear
 function install_utils
 {
         apt update && apt upgrade -y
-        apt install vim sudo rsync git net-tools mlocate htop screen figlet -y
+        apt install vim sudo rsync git net-tools mlocate htop screen figlet curl -y
 }
 
 function install_cheat
