@@ -230,6 +230,13 @@ if [ $# -gt 0 ]; then
 	clear
 fi
 
+echo "Installing motd"
+echo "__________________________"
+banner_install
+sleep 5
+clear
+
+
 echo "Creating ESGI user"
 echo "__________________________"
 create_user_UID_GID esgi 1000 1000 Pa55w.rd
