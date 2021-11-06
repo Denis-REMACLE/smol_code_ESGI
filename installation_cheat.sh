@@ -71,7 +71,7 @@ function make_root_bashrc
 {
 	echo "umask 007" >> /root/.bashrc
 	cat >> /root/.bashrc << EOF
-	export PS1="\[\033[38;5;1m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
+	export PS1="\[\033[38;5;1m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -87,7 +87,7 @@ function make_skel_bashrc
 {
 	echo "umask 007" >> /etc/skel/.bashrc
 	cat >> /etc/skel/.bashrc << EOF
-	export PS1="\[\033[38;5;14m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
+	export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
@@ -103,7 +103,7 @@ function make_user_bashrc
 {
 	echo "umask 007" >> /home/$1/.bashrc
 	cat >> /home/$1/.bashrc << EOF
-	export PS1="\[\033[38;5;14m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] "
+	export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
 	alias ll='ls -rtl'
 	alias la='ls -lsa'
 	alias rm='rm -Iv --preserve-root'
