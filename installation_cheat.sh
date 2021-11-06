@@ -10,7 +10,7 @@ clear
 function install_utils
 {
         apt update && apt upgrade -y
-        apt install vim sudo rsync git net-tools mlocate htop screen neofetch -y
+        apt install vim sudo rsync git net-tools mlocate htop screen figlet -y
 }
 
 function install_cheat
@@ -157,7 +157,7 @@ function create_users
 {
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
-	echo -e $password"\n"$password | passwd $1
+	echo -e $password | passwd --stdin $1
 }
 
 function create_user_UID_GID
@@ -168,9 +168,22 @@ function create_user_UID_GID
 
 function banner_install
 {
+	echo "" > /etc/motd
 	touch /etc/profile.d/mymotd.sh
-	echo "neofetch" > /etc/profile.d/mymotd.sh
+	echo "hostname | figlet" >> /etc/profile.d/mymotd.sh
+	echo "cat /etc/motd_for_sacking" >> /etc/profile.d/mymotd.sh
+	cat >> /etc/motd_for_sacking << EOF
+	
+	Hello dear user,
+
+	You may use this server responsibly and be mindful of the commands you may type or your will be sacked !
+
+	Cheerfully,
+	Your system administrator
+
+EOF
 	echo "who" >> /etc/profile.d/mymotd.sh
+	chmod 766 /etc/motd_for_sacking
 	chmod +x /etc/profile.d/mymotd.sh
 }
 
