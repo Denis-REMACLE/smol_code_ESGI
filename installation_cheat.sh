@@ -231,6 +231,6 @@ if [$# -gt 0]; then
 	clear
 fi
 
-echo "Creating ESGI user"
-echo "__________________________"
-create_user_UID_GID esgi 1000 1000 Pa55w.rd
+#echo "Creating ESGI user"
+#echo "__________________________"
+#create_user_UID_GID esgi 1000 1000 Pa55w.rd
