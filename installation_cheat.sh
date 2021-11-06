@@ -3,8 +3,8 @@
 # Author : Denis REMACLE
 # 
 
-# set -e
-# set -x
+set -e
+set -x
 clear
 
 function install_utils
