@@ -139,7 +139,7 @@ function config_linking
 			usermod -a -G sudo $user
 			mkdir /home/$user/.config
 			ln -s /opt/COMMUN/cheat /home/$user/.config/cheat
-			chown -R $i /home/$user/.config
+			chown -R $user /home/$user/.config
 		fi
 	done
 }
