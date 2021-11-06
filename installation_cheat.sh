@@ -3,8 +3,8 @@
 # Author : Denis REMACLE
 # 
 
-set -e
-set -x
+# set -e
+# set -x
 clear
 
 function install_utils
@@ -188,8 +188,7 @@ echo "Creating directories"
 echo "__________________________"
 create_dirs
 sleep 5
-
-cclear
+clear
 
 echo "Configuring cheat"
 echo "__________________________"
