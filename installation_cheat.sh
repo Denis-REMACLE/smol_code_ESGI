@@ -3,14 +3,14 @@
 # Author : Denis REMACLE
 # 
 
-set -e
-set -x
+# set -e
+# set -x
 clear
 
 function install_utils
 {
         apt update && apt upgrade -y
-        apt install vim sudo rsync git net-tools mlocate htop screen -y
+        apt install vim sudo rsync git net-tools mlocate htop screen neofetch -y
 }
 
 function install_cheat
@@ -79,6 +79,7 @@ function make_root_bashrc
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
 	alias su="su - "
+	alias hs='history|grep -i '
 EOF
 }
 
@@ -94,6 +95,7 @@ function make_skel_bashrc
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
 	alias su="su - "
+	alias hs='history|grep -i '
 EOF
 }
 
@@ -109,6 +111,7 @@ function make_user_bashrc
 	alias chmod="chmod -v --preserve-root"
 	alias chgrp="chgrp -v --preserve-root"
 	alias su="su - "
+	alias hs='history|grep -i '
 EOF
 }
 
@@ -161,6 +164,11 @@ function create_user_UID_GID
 {
 	useradd -G sudo,commun -s /bin/bash --create-home -g $2 -u $3 $1
 	echo -e $4"\n"$4 | passwd $1
+}
+
+function banner_install
+{
+	bash -c $'echo "neofetch" >> /etc/profile.d/mymotd.sh && chmod +x /etc/profile.d/mymotd.sh'
 }
 
 echo "Installing utils"
@@ -221,10 +229,8 @@ if [ $# -gt 0 ]; then
 	clear
 fi
 
-#echo "Creating ESGI user"
-#echo "__________________________"
-<<<<<<< HEAD
-#create_user_UID_GID esgi 1000 1000 Pa55w.rd
-=======
-#create_user_UID_GID esgi 1000 1000 Pa55w.rd
->>>>>>> d58ae39a5c9fa49a8fcd75fc638155978f9dbff7
+echo "Creating ESGI user"
+echo "__________________________"
+create_user_UID_GID esgi 1000 1000 Pa55w.rd
+sleep 5
+clear
