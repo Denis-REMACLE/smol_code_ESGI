@@ -55,7 +55,7 @@ function install_cheatsheets
 	git clone https://github.com/cheat/cheatsheets.git
 
 	# Les déplacer dans le dossier créé précédement
-	\mv -v cheatsheets/[a-Z]* /opt/COMMUN/cheat/cheatsheets/community
+	mv -v cheatsheets/ /opt/COMMUN/cheat/cheatsheets/community
 }
 
 function config_dir_making
