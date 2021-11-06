@@ -192,7 +192,7 @@ clear
 
 echo "Configuring cheat"
 echo "__________________________"
-onfigure_cheat
+configure_cheat
 sleep 5
 clear
 
