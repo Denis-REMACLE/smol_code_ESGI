@@ -212,7 +212,7 @@ config_linking
 sleep 5
 clear
 
-if [$# -gt 0]; then
+if [ $# -gt 0 ]; then
 	echo "Creating users"
 	echo "__________________________"
 	for user in "$@"; do
