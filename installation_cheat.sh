@@ -157,7 +157,11 @@ function create_users
 {
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
-	echo -e $password | passwd --stdin $1
+}
+
+function password_updator
+{
+	cat passwords | chpasswd
 }
 
 function create_user_UID_GID
@@ -174,12 +178,12 @@ function banner_install
 	echo "cat /etc/motd_for_sacking" >> /etc/profile.d/mymotd.sh
 	cat >> /etc/motd_for_sacking << EOF
 	
-	Hello dear user,
+Hello dear user,
 
-	You may use this server responsibly and be mindful of the commands you may type or your will be sacked !
+You may use this server responsibly and be mindful of the commands you may type or your will be sacked !
 
-	Cheerfully,
-	Your system administrator
+Cheerfully,
+Your system administrator
 
 EOF
 	echo "who" >> /etc/profile.d/mymotd.sh
@@ -245,6 +249,8 @@ if [ $# -gt 0 ]; then
 	clear
 fi
 
+password_updator
+
 echo "Installing motd"
 echo "__________________________"
 banner_install
@@ -252,8 +258,8 @@ sleep 5
 clear
 
 
-echo "Creating ESGI user"
-echo "__________________________"
-create_user_UID_GID esgi 1000 1000 Pa55w.rd
-sleep 5
-clear
+# echo "Creating ESGI user"
+# echo "__________________________"
+# create_user_UID_GID esgi 1000 1000 Pa55w.rd
+# sleep 5
+# clear
