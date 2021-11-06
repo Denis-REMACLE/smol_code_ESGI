@@ -147,17 +147,17 @@ function config_linking
 	done
 }
 
-# function password_generator
-# {
-# 	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
-# 	echo $1":"$password >> passwords
-# }
+function password_generator
+{
+	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
+	echo $1":"$password >> passwords
+}
 
 function create_users
 {
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
-	echo -e "default\ndefault\n"| passwd $1
+	echo -e $password"\n"$password | passwd $1
 
 }
 
@@ -182,7 +182,8 @@ function banner_install
 
 Hello dear user,
 
-You may use this server responsibly and be mindful of the commands you may type or your will be sacked !
+You may use this server responsibly and be mindful of the commands type.
+Or there will be trouble !
 
 Cheerfully,
 Your system administrator
