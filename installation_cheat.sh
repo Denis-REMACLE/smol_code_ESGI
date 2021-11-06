@@ -153,14 +153,14 @@ function password_generator
 
 function create_users
 {
-	useradd -G sudo, commun -s /bin/bash --create-home $1
+	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
 	echo -e $password"\n"$password | passwd $1
 }
 
 function create_user_UID_GID
 {
-	useradd -G sudo, commun -s /bin/bash --create-home -g $2 -u $3 $1
+	useradd -G sudo,commun -s /bin/bash --create-home -g $2 -u $3 $1
 	echo -e $4"\n"$4 | passwd $1
 }
 
