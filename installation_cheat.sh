@@ -168,7 +168,8 @@ function create_user_UID_GID
 
 function banner_install
 {
-	bash -c $'echo "neofetch" >> /etc/profile.d/mymotd.sh && chmod +x /etc/profile.d/mymotd.sh'
+	echo "neofetch" > /etc/profile.d/mymotd.sh && chmod +x /etc/profile.d/mymotd.sh
+	echo "who" >> /etc/profile.d/mymotd.sh && chmod +x /etc/profile.d/mymotd.sh
 }
 
 echo "Installing utils"
