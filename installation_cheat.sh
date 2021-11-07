@@ -175,7 +175,6 @@ function banner_install
 	echo "hostname | figlet" >> /etc/profile.d/mymotd.sh
 	echo "cat /etc/mymotd" >> /etc/profile.d/mymotd.sh
 	cat >> /etc/mymotd << EOF
-
 Hello dear user,
 
 You may use this server responsibly and be mindful of the commands type.
