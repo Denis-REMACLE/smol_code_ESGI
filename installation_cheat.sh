@@ -71,15 +71,15 @@ function make_root_bashrc
 {
 	echo "umask 007" >> /root/.bashrc
 	cat >> /root/.bashrc << EOF
-	export PS1="\[\033[38;5;1m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
-	alias ll='ls -rtl'
-	alias la='ls -lsa'
-	alias rm='rm -Iv --preserve-root'
-	alias chown="chown -v --preserve-root"
-	alias chmod="chmod -v --preserve-root"
-	alias chgrp="chgrp -v --preserve-root"
-	alias su="su - "
-	alias hs='history|grep -i '
+export PS1="\[\033[38;5;1m\]\n[\t] \u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
+alias ll='ls -rtl'
+alias la='ls -lsa'
+alias rm='rm -Iv --preserve-root'
+alias chown="chown -v --preserve-root"
+alias chmod="chmod -v --preserve-root"
+alias chgrp="chgrp -v --preserve-root"
+alias su="su - "
+alias hs='history|grep -i '
 EOF
 }
 
@@ -87,15 +87,15 @@ function make_skel_bashrc
 {
 	echo "umask 007" >> /etc/skel/.bashrc
 	cat >> /etc/skel/.bashrc << EOF
-	export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
-	alias ll='ls -rtl'
-	alias la='ls -lsa'
-	alias rm='rm -Iv --preserve-root'
-	alias chown="chown -v --preserve-root"
-	alias chmod="chmod -v --preserve-root"
-	alias chgrp="chgrp -v --preserve-root"
-	alias su="su - "
-	alias hs='history|grep -i '
+export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
+alias ll='ls -rtl'
+alias la='ls -lsa'
+alias rm='rm -Iv --preserve-root'
+alias chown="chown -v --preserve-root"
+alias chmod="chmod -v --preserve-root"
+alias chgrp="chgrp -v --preserve-root"
+alias su="su - "
+alias hs='history|grep -i '
 EOF
 }
 
@@ -103,15 +103,15 @@ function make_user_bashrc
 {
 	echo "umask 007" >> /home/$1/.bashrc
 	cat >> /home/$1/.bashrc << EOF
-	export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
-	alias ll='ls -rtl'
-	alias la='ls -lsa'
-	alias rm='rm -Iv --preserve-root'
-	alias chown="chown -v --preserve-root"
-	alias chmod="chmod -v --preserve-root"
-	alias chgrp="chgrp -v --preserve-root"
-	alias su="su - "
-	alias hs='history|grep -i '
+export PS1="\[\033[38;5;14m\]\n[\t]\u@\h \w\n\\$ :\[$(tput sgr0)\] \[$(tput sgr0)\]"
+alias ll='ls -rtl'
+alias la='ls -lsa'
+alias rm='rm -Iv --preserve-root'
+alias chown="chown -v --preserve-root"
+alias chmod="chmod -v --preserve-root"
+alias chgrp="chgrp -v --preserve-root"
+alias su="su - "
+alias hs='history|grep -i '
 EOF
 }
 
@@ -128,6 +128,10 @@ function config_linking
 	# Créer les liens symboliques pour les utilisateurs
 	ln -vs /opt/COMMUN/cheat /root/.config/cheat
 	ln -vs /opt/COMMUN/cheat /etc/skel/.config/cheat
+
+	# Défini bash comme shell par défaut
+	rm /bin/sh
+	ln -vs /bin/bash /bin/sh
 
 	# Récupérer une liste des utilisateur "legité
 	users=($(grep '/bin/bash' /etc/passwd | awk -F : '{print $1}'))
@@ -149,24 +153,27 @@ function config_linking
 
 function password_generator
 {
+	# génère un mot de passe de 10 charactères
 	password=$(< /dev/urandom tr -dc a-zA-Z0-9 | head -c10)
 	echo $1":"$password >> passwords
 }
 
 function create_users
 {
+	# Créé un utilisateur
 	useradd -G sudo,commun -s /bin/bash --create-home $1
 	password_generator $1
 	yes $password | passwd $1
-
 }
 
 function banner_install
 {
+	# Créé un motd
 	rm /etc/updatemotd.d/*
 	touch /etc/updatemotd.d/00-mymotd
+	echo "#!/bin/sh" >> /etc/updatemotd.d/00-mymotd
 	echo "hostname | figlet" >> /etc/updatemotd.d/00-mymotd
-	echo "cat /etc/motd_for_sacking" >> /etc/updatemotd.d/00-mymotd
+	echo "cat /etc/motd" >> /etc/updatemotd.d/00-mymotd
 	cat >> /etc/motd << EOF
 
 Hello dear user,
@@ -179,7 +186,7 @@ Your system administrator
 
 EOF
 	echo "who" >> /etc/updatemotd.d/00-mymotd
-	chmod 744 /etc/motd_for_sacking
+	chmod 744 /etc/motd
 	chmod +x /etc/updatemotd.d/00-mymotd
 }
 
