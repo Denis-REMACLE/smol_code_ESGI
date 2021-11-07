@@ -171,7 +171,6 @@ function banner_install
 	# Créé un motd
 	rm /etc/motd
 	rm /etc/update-motd.d/*
-	touch /etc/update-motd.d/00-mymotd
 	echo "#!/bin/sh" >> /etc/update-motd.d/00-figlet
 	echo "hostname | figlet" >> /etc/update-motd.d/00-figlet
 	echo "#!/bin/sh" >> /etc/update-motd.d/10-mymotd
