@@ -187,7 +187,8 @@ Your system administrator
 
 EOF
 	echo "who -H" >> /etc/update-motd.d/00-mymotd
-	chmod 744 /etc/motd
+	echo "who" >> /etc/update-motd.d/00-mymotd
+	chmod 744 /etc/mymotd
 	chmod +x /etc/update-motd.d/00-mymotd
 }
 
