@@ -171,10 +171,10 @@ function banner_install
 	# Créé un motd
 	rm /etc/motd
 	rm /etc/update-motd.d/*
-	echo "#!/bin/sh" >> /etc/update-motd.d/00-figlet
-	echo "hostname | figlet" >> /etc/update-motd.d/00-figlet
-	echo "#!/bin/sh" >> /etc/update-motd.d/10-mymotd
-	echo "cat /etc/mymotd" >> /etc/update-motd.d/10-mymotd
+	echo "#!/bin/sh" >> /etc/update-motd.d/00-mymotd
+	echo "hostname | figlet" >> /etc/update-motd.d/00-mymotd
+	echo "who" >> /etc/update-motd.d/00-mymotd
+	echo "cat /etc/mymotd" >> /etc/update-motd.d/00-mymotd
 	cat >> /etc/mymotd << EOF
 
 Hello dear user,
@@ -186,12 +186,8 @@ Cheerfully,
 Your system administrator
 
 EOF
-	echo "#!/bin/sh" >> /etc/update-motd.d/20-who
-	echo "who" >> /etc/update-motd.d/20-who
 	chmod 744 /etc/mymotd
-	chmod +x /etc/update-motd.d/00-figlet
-	chmod +x /etc/update-motd.d/10-mymotd
-	chmod +x /etc/update-motd.d/20-who
+	chmod +x /etc/update-motd.d/00-mymotd
 }
 
 echo "Installing utils"
