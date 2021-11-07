@@ -169,13 +169,13 @@ function create_users
 function banner_install
 {
 	# Créé un motd
-	echo "" > /etc/motd
+	rm /etc/motd
 	rm /etc/update-motd.d/*
 	touch /etc/update-motd.d/00-mymotd
 	echo "#!/bin/sh" >> /etc/update-motd.d/00-mymotd
 	echo "hostname | figlet" >> /etc/update-motd.d/00-mymotd
-	echo "cat /etc/motd" >> /etc/update-motd.d/00-mymotd
-	cat >> /etc/motd << EOF
+	echo "cat /etc/mymotd" >> /etc/update-motd.d/00-mymotd
+	cat >> /etc/mymotd << EOF
 
 Hello dear user,
 
@@ -186,7 +186,7 @@ Cheerfully,
 Your system administrator
 
 EOF
-	echo "who" >> /etc/update-motd.d/00-mymotd
+	echo "who -H" >> /etc/update-motd.d/00-mymotd
 	chmod 744 /etc/motd
 	chmod +x /etc/update-motd.d/00-mymotd
 }
