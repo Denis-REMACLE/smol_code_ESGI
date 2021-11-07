@@ -190,7 +190,7 @@ EOF
 	echo "#!/bin/sh" >> /etc/update-motd.d/20-who
 	echo "who" >> /etc/update-motd.d/20-who
 	chmod 744 /etc/mymotd
-	chmod +x /etc/update-motd.d/00-mymotd
+	chmod +x /etc/update-motd.d/00-figlet
 	chmod +x /etc/update-motd.d/10-mymotd
 	chmod +x /etc/update-motd.d/20-who
 }
