@@ -163,11 +163,11 @@ function create_users
 
 function banner_install
 {
-	echo "" > /etc/motd
-	touch /etc/profile.d/mymotd.sh
-	echo "hostname | figlet" >> /etc/profile.d/mymotd.sh
-	echo "cat /etc/motd_for_sacking" >> /etc/profile.d/mymotd.sh
-	cat >> /etc/motd_for_sacking << EOF
+	rm /etc/updatemotd.d/*
+	touch /etc/updatemotd.d/00-mymotd
+	echo "hostname | figlet" >> /etc/updatemotd.d/00-mymotd
+	echo "cat /etc/motd_for_sacking" >> /etc/updatemotd.d/00-mymotd
+	cat >> /etc/motd << EOF
 
 Hello dear user,
 
@@ -178,9 +178,9 @@ Cheerfully,
 Your system administrator
 
 EOF
-	echo "who" >> /etc/profile.d/mymotd.sh
-	chmod 766 /etc/motd_for_sacking
-	chmod +x /etc/profile.d/mymotd.sh
+	echo "who" >> /etc/updatemotd.d/00-mymotd
+	chmod 744 /etc/motd_for_sacking
+	chmod +x /etc/updatemotd.d/00-mymotd
 }
 
 echo "Installing utils"
