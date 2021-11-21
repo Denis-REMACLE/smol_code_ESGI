@@ -132,8 +132,6 @@ def scanLinux(options):
 
 def scanWindows(options):
 
-    global connected_hosts
-
     os.system("ipconfig > ipconfig.txt")
     path = os.getcwd() + "\ipconfig.txt"
 
@@ -183,8 +181,6 @@ def scanWindows(options):
     target = target + str(CIDR)
     print(target)
 
-    # Get all hosts on that network
-    connected_hosts = []
     # ping request
     for host in IPNetwork(target):
         thread_ping = threading.Thread(target=scanPing, args=(host, ))
