@@ -249,7 +249,7 @@ if __name__ == "__main__":
         if OS == "Linux":
             scanLinux(args)
         elif OS == "Windows":
-            scanLinux(args)
+            scanWindows(args)
         else:
             print("OS non supporté")
             exit()
