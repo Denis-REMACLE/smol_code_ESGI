@@ -13,7 +13,6 @@ from netaddr import IPNetwork, IPAddress
 from vars import sub_domain, short_ports, long_ports
 
 connected_hosts = []
-available_ports = []
 
 def scanPing(host):
     global connected_hosts
@@ -31,7 +30,6 @@ def scanPing(host):
         if "re\x87us = 1" in output.decode("ISO-8859-1"):
             print(str(host), "is Online")
             connected_hosts.append(str(host))
-
 
 def scanDomain(domain, outputs):
 
@@ -115,6 +113,8 @@ def scanLinux(options):
             print("ping")
             sock = socket.socket()
             sock.settimeout(0.5)
+
+            available_ports = []
             for port in list_port:
                 try:
                     test = sock.connect((host, port))
@@ -131,6 +131,8 @@ def scanLinux(options):
                         file.write("Port : "+port+" open, on host : "+host+" !\n")
 
 def scanWindows(options):
+
+    global connected_hosts
 
     os.system("ipconfig > ipconfig.txt")
     path = os.getcwd() + "\ipconfig.txt"
@@ -189,7 +191,7 @@ def scanWindows(options):
         thread_ping.start()
 
     time.sleep(1)
-    
+
     if options.outputs != None:
         with open(options.outputs, 'a') as file:
             for ip in range(len(connected_hosts)):
@@ -205,9 +207,10 @@ def scanWindows(options):
             list_port = short_ports
         
         for host in connected_hosts:
-            print("ping")
             sock = socket.socket()
             sock.settimeout(0.5)
+
+            available_ports = []
             for port in list_port:
                 try:
                     test = sock.connect((host, port))
