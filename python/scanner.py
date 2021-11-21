@@ -187,11 +187,9 @@ def scanWindows(options):
     for host in IPNetwork(target):
         thread_ping = threading.Thread(target=scanPing, args=(host, ))
         thread_ping.start()
-    print("This is the list of all connected hosts")
-    print(connected_hosts)
-
 
     time.sleep(1)
+    
     if options.outputs != None:
         with open(options.outputs, 'a') as file:
             for ip in range(len(connected_hosts)):
