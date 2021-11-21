@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Author : Denis REMACLE
+# Author : Denis REMACLE, Amad MOHAMMAD
+# Year : 2021
+# License : GPLv3
 # 
 
 # set -e

@@ -1,33 +1,72 @@
 import os
 import sys
+import requests
+import argparse
 import platform
 import re
 import subprocess
 import ipaddr
 import socket
+import threading
+import time
+from netaddr import IPNetwork, IPAddress
+from vars import sub_domain, short_ports, long_ports
 
-if len(sys.argv) == 2 and sys.argv[1] == "-h":
-    print("Ce programme va récupérer les info réseaux d'une machine Linux ou Windows et les sauvergarder sur un fichier puis ressorit les adresses IP présentes")
-    exit()
+connected_hosts = []
+available_ports = []
 
-OS = platform.system()
-print("OS on your system is ",OS)
-list_ports = [22, 80, 443]
-if OS == "Linux":
+def scanPing(host):
+    global connected_hosts
+    if OS == "Linux":
+        output = subprocess.Popen(
+            ["ping", "-w", "1", "-W", "1", str(host)], stdout=subprocess.PIPE
+        ).communicate()[0]
+        if "icmp_seq=1 ttl=" in output.decode("utf-8") or "icmp_seq=1 received" in output.decode('utf-8'):
+            print(str(host), "is Online")
+            connected_hosts.append(str(host))
+    else:
+        output = subprocess.Popen(
+            ["ping", "-n", "1", "-w", "250", str(host)], stdout=subprocess.PIPE
+        ).communicate()[0]
+        if "re\x87us = 1" in output.decode("ISO-8859-1"):
+            print(str(host), "is Online")
+            connected_hosts.append(str(host))
+
+
+def scanDomain(domain, outputs):
+
+    discovered_subdomains = []
+
+    for sub in sub_domain:
+        url = f"http://{sub}.{domain}"
+        try:
+            requests.get(url)
+        except requests.ConnectionError:
+            pass
+        else:
+            print("Discovered subdomain : ", url)
+            discovered_subdomains.append(url)
+    
+    if outputs != None:
+        with open(outputs, 'a') as file:
+            for sub in range(len(discovered_subdomains)):
+                file.write("Discovered subdomain : "+discovered_subdomains[sub]+"\n")
+
+def scanLinux(options):
 
     os.system("ip a > network.txt")
     path = subprocess.check_output("pwd").decode().strip()
-    path = path  + "/network.txt"
+    path = path + "/network.txt"
 
     if os.path.isfile(path) == False:
         print("\nFile wasn't created")
         exit()
-    
+
     list = os.listdir(".")
     print("\nDirectory content\n")
-    for i in range (len(list)):
+    for i in range(len(list)):
         print(list[i])
-    
+
     choices = {}
     number = 0
     print("\nHere are available IP address \n")
@@ -35,10 +74,10 @@ if OS == "Linux":
     with open("ip_available", "r") as ips:
         for ip in ips:
             usable_ip = ip.strip("\n")
-            print("[%i] : \t%s" %(number, usable_ip))
+            print("[%i] : \t%s" % (number, usable_ip))
             choices[str(number)] = usable_ip
             number += 1
-    
+
     os.remove("network.txt")
     os.remove("ip_available")
     userChoice = str(input("\nPlease choose the ip you want to target : "))
@@ -51,35 +90,50 @@ if OS == "Linux":
 
     # Get all hosts on that network
     all_hosts = target.iterhosts()
-    connected_hosts = []
-    print()
 
     for host in all_hosts:
-        output = subprocess.Popen(['ping', '-w', '1', '-W', '1', str(host)], stdout=subprocess.PIPE).communicate()[0]
-        if "icmp_seq=1" in output.decode('utf-8'):
-            connected_hosts.append(host)
-            print(str(host), "is Online")
-    print()
+        thread_ping = threading.Thread(target=scanPing, args=(host, ))
+        thread_ping.start()
 
-    if "-s" in sys.argv:
+    time.sleep(1)
+
+    if options.outputs != None:
+        with open(options.outputs, 'a') as file:
+            for ip in range(len(connected_hosts)):
+                file.write(connected_hosts[ip]+" is connected !\n")
+
+    if options.ports:
+        if options.ports.lower() == "long":
+            list_port = long_ports
+        elif options.ports.lower() == "short":
+            list_port = short_ports
+        else:
+            print("Scan port option incorrect, selecting short !")
+            list_port = short_ports
+        
         for host in connected_hosts:
-            nom_fichier = str(host).replace(".", "-")+"_scan"
-            print("scanning "+ str(host))
-            os.system("cat scanning "+ str(host) +" >> "+ str(sys.argv[output+1]))
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            for port in list_ports:
-                test = sock.connect(host, port)
-                if test == 0:
-                    if "-o" in sys.argv:
-                        output = sys.argv.index("-o")
-                        os.system("cat "+ nom_fichier +" >> "+ str(sys.argv[output+1]))
-                    else:
-                        os.system("cat "+nom_fichier)
-                        os.remove(nom_fichier)
-            print("Complete")
-            
+            print("ping")
+            sock = socket.socket()
+            sock.settimeout(0.5)
+            for port in list_port:
+                try:
+                    test = sock.connect((host, port))
+                except:
+                    print("Port : "+str(port)+" closed, on host : "+host)
+                else:
+                    print("Port : "+str(port)+" opened, on host : "+host)
+                    available_ports.append(str(port))
+            time.sleep(1)
 
-elif OS == "Windows":
+            if options.outputs != None:
+                with open(options.outputs, 'a') as file:
+                    for port in available_ports:
+                        file.write("Port : "+port+" open, on host : "+host+" !\n")
+
+    
+
+
+def scanWindows(options):
 
     os.system("ipconfig > ipconfig.txt")
     path = os.getcwd() + "\ipconfig.txt"
@@ -88,23 +142,24 @@ elif OS == "Windows":
         print("\n le fichier .txt n'a été créé \n")
         exit()
 
-    list = os.listdir(".")
-    print("\n Contenu du dossier \n")
-    for i in range (len(list)):
-        print(list[i])
-    
     choices = {}
     number = 0
     print("\n Voici vos adresses IP \n")
+
+    # get every ip and mask by putting them in a file
     os.system("findstr IPv4 ipconfig.txt > ipv4use.txt")
+    os.system("findstr Mas ipconfig.txt > maskuse.txt")
+
+    # Print and select function of ip you want to scan
     with open("ipv4use.txt", "r") as ips:
         for ip in ips:
-            usable_ip = ip.split(':')[1]
+
+            usable_ip = ip.split(":")[1]
             usable_ip = usable_ip.strip("\n")
             usable_ip = usable_ip.strip(" ")
-            print("[%i] : \t%s" %(number, usable_ip))
+            print("[%i] : \t%s" % (number, usable_ip))
             choices[str(number)] = usable_ip
-            number+=1
+            number += 1
 
     os.remove("ipv4use.txt")
     userChoice = str(input("\nPlease choose the ip you want to target : "))
@@ -113,17 +168,96 @@ elif OS == "Windows":
         print("\nThis is not quite right !")
         userChoice = str(input("\nPlease choose the ip you want to target : "))
 
+    # take mask depenting to ip chosed by user
+    file = open("maskuse.txt", "r")
+    lines_to_read = [int(userChoice)]
+
+    for position, line in enumerate(file):
+        if position in lines_to_read:
+            line = line[44:].rstrip()
+            CIDR = IPAddress(line).netmask_bits()  # This is the CIDR of ip
+
+    file.close()
+    # output of target will be "ip/cidr"
     target = ipaddr.IPv4Network(choices[userChoice])
+    target = str(target)[:-2]
+    target = target + str(CIDR)
+    print(target)
 
     # Get all hosts on that network
-    all_hosts = target.iterhosts()
     connected_hosts = []
+    # ping request
+    for host in IPNetwork(target):
+        thread_ping = threading.Thread(target=scanPing, args=host)
+        thread_ping.start()
+    print("This is the list of all connected hosts")
+    print(connected_hosts)
 
-    for host in all_hosts:
-        output = subprocess.Popen(['ping', '/w', '1', '/W', '1', str(host)], stdout=subprocess.PIPE).communicate()[0]
-        if "icmp_seq=1" in output.decode('utf-8'):
-            connected_hosts.append(host)
-            print(str(host), "is Online")
 
-else:
-    print("Pas d'OS supporté")
+    time.sleep(1)
+    if options.outputs != None:
+        with open(options.outputs, 'a') as file:
+            for ip in range(len(connected_hosts)):
+                file.write(connected_hosts[ip]+" is connected !\n")
+
+    if options.ports:
+        if options.ports.lower() == "long":
+            list_port = long_ports
+        elif options.ports.lower() == "short":
+            list_port = short_ports
+        else:
+            print("Scan port option incorrect, selecting short !")
+            list_port = short_ports
+        
+        for host in connected_hosts:
+            print("ping")
+            sock = socket.socket()
+            sock.settimeout(0.5)
+            for port in list_port:
+                try:
+                    test = sock.connect((host, port))
+                except:
+                    print("Port : "+str(port)+" closed, on host : "+host)
+                else:
+                    print("Port : "+str(port)+" opened, on host : "+host)
+                    available_ports.append(str(port))
+            time.sleep(1)
+
+            if options.outputs != None:
+                with open(options.outputs, 'a') as file:
+                    for port in available_ports:
+                        file.write("Port : "+port+" open, on host : "+host+" !\n")
+
+
+if __name__ == "__main__":
+
+    # initialize the ArgumentParser
+    parser = argparse.ArgumentParser()
+
+    # add the arguments
+    parser.add_argument("-p", "--ping", help="Scan the network with pings", default=False, action="store_true")
+    parser.add_argument("-s", "--ports", help="Scan all available hosts ports", default=False, type=str)
+    parser.add_argument("-d", "--domain", help="Scan sub domains for selected domains", default=False, type=str)
+    parser.add_argument("-o", "--outputs", help="Outputs data to file", default=None, type=str)
+
+    # and then parse them
+    args = parser.parse_args()
+
+    OS = platform.system()
+
+    if args.ping != False:
+        if OS == "Linux":
+            scanLinux(args)
+        elif OS == "Windows":
+            scanLinux(args)
+        else:
+            print("OS non supporté")
+            exit()
+    else:
+        print("You are using "+OS)
+
+    if args.domain:
+        if args.outputs:
+            scanDomain(args.domain, args.outputs)
+        else:
+            scanDomain(args.domain, None)
