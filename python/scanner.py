@@ -130,9 +130,6 @@ def scanLinux(options):
                     for port in available_ports:
                         file.write("Port : "+port+" open, on host : "+host+" !\n")
 
-    
-
-
 def scanWindows(options):
 
     os.system("ipconfig > ipconfig.txt")
@@ -188,7 +185,7 @@ def scanWindows(options):
     connected_hosts = []
     # ping request
     for host in IPNetwork(target):
-        thread_ping = threading.Thread(target=scanPing, args=host)
+        thread_ping = threading.Thread(target=scanPing, args=(host, ))
         thread_ping.start()
     print("This is the list of all connected hosts")
     print(connected_hosts)
