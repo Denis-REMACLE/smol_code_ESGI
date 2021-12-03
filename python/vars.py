@@ -50,6 +50,8 @@ sub_domain = [
     "www2",
     "www3",
 ]
+well_known_ports = [i for i in range(0, 1024)]
+everyone_ports = [i for i in range(0, 65536)]
 long_ports = [
     1,
     5,

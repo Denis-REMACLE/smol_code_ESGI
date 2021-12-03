@@ -10,7 +10,7 @@ import socket
 import threading
 import time
 from netaddr import IPNetwork, IPAddress
-from vars import sub_domain, short_ports, long_ports
+from vars import sub_domain, short_ports, long_ports, well_known_ports, everyone_ports
 
 connected_hosts = []
 
@@ -105,6 +105,10 @@ def scanLinux(options):
             list_port = long_ports
         elif options.ports.lower() == "short":
             list_port = short_ports
+        elif options.ports.lower() == "everyone":
+            list_port = everyone_ports
+        elif options.ports.lower() == "well-known":
+            list_port = well_known_ports
         else:
             print("Scan port option incorrect, selecting short !")
             list_port = short_ports
@@ -112,7 +116,7 @@ def scanLinux(options):
         for host in connected_hosts:
             print("ping")
             sock = socket.socket()
-            sock.settimeout(0.5)
+            sock.settimeout(1)
 
             available_ports = []
             for port in list_port:
