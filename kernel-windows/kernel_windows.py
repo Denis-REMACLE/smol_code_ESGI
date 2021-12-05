@@ -1,6 +1,3 @@
-# Python code to add current script to the registry
- 
-# module to edit the windows registry
 import winreg as reg
 import os            
  
@@ -11,17 +8,18 @@ def AddToRegistry(name_program):
     # so if it was executed from desktop,
     # then __file__ will be
     # c:\users\current_user\desktop
-    pth = os.path.dirname(os.path.realpath(__file__))
+    #pth = os.path.dirname(os.path.realpath(__file__))
     
     # name of the python file with extension
-    s_name=name_program
+    #s_name=name_program
+    address=name_program
     
     # joins the file name to end of path address
-    address=os.join(pth,s_name)
+    #address=pth.join(s_name)
     
     # key we want to change is HKEY_CURRENT_USER
     # key value is Software\Microsoft\Windows\CurrentVersion\Run
-    key = HKEY_CURRENT_USER
+    key = reg.HKEY_CURRENT_USER
     key_value = "Software\Microsoft\Windows\CurrentVersion\Run"
     
     # open the key to make changes to
@@ -35,5 +33,5 @@ def AddToRegistry(name_program):
 
 # Driver Code
 if __name__=="__main__":
-    name_program = "calc.exe"
+    name_program = "C:\Windows\WinSxS\wow64_microsoft-windows-calc_31bf3856ad364e35_10.0.19041.1_none_6a03b910ee7a4073\calc.exe"
     AddToRegistry(name_program)
