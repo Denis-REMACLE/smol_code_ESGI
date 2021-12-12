@@ -1,5 +1,5 @@
 import winreg as reg
-import Win32inet
+import subprocess
 import ctypes
 import argparse
 import os
