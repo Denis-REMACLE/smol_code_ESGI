@@ -34,7 +34,7 @@ def ProgramOnStartup(name_program):
     # now close the opened key
     reg.CloseKey(open)
 
-def ProgramOnStartup(name_program):
+def UnProgramOnStartup(name_program):
     
     # in python __file__ is the instant of
     # file path where it was executed
