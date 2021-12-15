@@ -65,8 +65,8 @@ def UnProgramOnStartup(name_program):
     reg.CloseKey(open)
 
 def ReadWirelessNetworks():
-
     key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles", 0, reg.KEY_READ)
+    networks = "Available wifi networks are : \n"
     for i in range(0, reg.QueryInfoKey(key)[0]):
         skey_name = reg.EnumKey(key, i)
         skey = reg.OpenKey(key, skey_name)
@@ -74,16 +74,17 @@ def ReadWirelessNetworks():
             a = reg.QueryValueEx(skey, 'ProfileName')[0]
             b = reg.QueryValueEx(skey, 'NameType')[0]
             if b == 71:
-                print(a)
+                networks += (lst[index] + "\n")
         except OSError as e:
             if e.errno == errno.ENOENT:
                 pass
         finally:
             skey.Close()
+    ctypes.windll.user32.MessageBoxA(0, b"Networks available", bin(networks), 0)
 
 def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = r'\SYSTEM\CurrentControlSet\Services\USBSTOR'
+    key_value = '\SYSTEM\CurrentControlSet\Services\\USBSTOR'
     
     try:
         # open the key to make changes to
@@ -97,7 +98,7 @@ def ReadOnlyUSB():
 
 def UnReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = r'\SYSTEM\CurrentControlSet\Services\USBSTOR'
+    key_value = '\SYSTEM\CurrentControlSet\Services\\USBSTOR'
     
     try:
         # open the key to make changes to
