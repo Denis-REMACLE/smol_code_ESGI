@@ -80,11 +80,11 @@ def ReadWirelessNetworks():
                 pass
         finally:
             skey.Close()
-    ctypes.windll.user32.MessageBoxA(0, b"Networks available", bin(networks), 0)
+    ctypes.windll.user32.MessageBoxA(0, b"Networks available", networks, 0)
 
 def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = '\SYSTEM\CurrentControlSet\Services\\USBSTOR'
+    key_value = "SYSTEM\CurrentControlSet\Services\\USBSTOR"
     
     try:
         # open the key to make changes to
@@ -98,7 +98,7 @@ def ReadOnlyUSB():
 
 def UnReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = '\SYSTEM\CurrentControlSet\Services\\USBSTOR'
+    key_value = "SYSTEM\CurrentControlSet\Services\\USBSTOR"
     
     try:
         # open the key to make changes to
