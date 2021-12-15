@@ -65,20 +65,25 @@ def UnProgramOnStartup(name_program):
     reg.CloseKey(open)
 
 def ReadWirelessNetworks():
-    result = subprocess.check_output(['netsh', 'wlan', 'show', 'network'])
-    result = result.decode('gbk')
-    lst = result.split('\r\n')
-    lst = lst[4:]
-    networks = "Available wifi networks are : \n"
 
-    for index in range(len(lst)):
-        if index % 5 == 0:
-            networks += (lst[index] + "\n")
-    ctypes.windll.user32.MessageBoxA(0, b"Networks available", bin(networks), 0)
+    key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles", 0, winreg.KEY_READ)
+    for i in range(0, winreg.QueryInfoKey(key)[0]):
+        skey_name = winreg.EnumKey(key, i)
+        skey = winreg.OpenKey(key, skey_name)
+        try:
+            a = winreg.QueryValueEx(skey, 'ProfileName')[0]
+            b = winreg.QueryValueEx(skey, 'NameType')[0]
+            if b == 71:
+                print(a)
+        except OSError as e:
+            if e.errno == errno.ENOENT:
+                pass
+        finally:
+            skey.Close()
 
 def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = "\SYSTEM\CurrentControlSet\Services\USBSTOR"
+    key_value = r'\SYSTEM\CurrentControlSet\Services\USBSTOR'
     
     try:
         # open the key to make changes to
@@ -92,7 +97,7 @@ def ReadOnlyUSB():
 
 def UnReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = "\SYSTEM\CurrentControlSet\Services\USBSTOR"
+    key_value = r'\SYSTEM\CurrentControlSet\Services\USBSTOR'
     
     try:
         # open the key to make changes to
@@ -117,7 +122,7 @@ if __name__=="__main__":
 
     if args.do:
         ProgramOnStartup(name_program)
-        # ReadWirelessNetworks()
+        ReadWirelessNetworks()
         ReadOnlyUSB()
     
     if args.undo:
