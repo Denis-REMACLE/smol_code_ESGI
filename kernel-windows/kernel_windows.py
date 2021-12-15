@@ -22,7 +22,7 @@ def ProgramOnStartup(name_program):
     
     # key we want to change is HKEY_CURRENT_USER
     # key value is Software\Microsoft\Windows\CurrentVersion\Run
-    key = reg.HKEY_CURRENT_USER
+    key = reg.HKEY_LOCAL_MACHINE
     key_value = "Software\Microsoft\Windows\CurrentVersion\Run"
     
     # open the key to make changes to
@@ -52,7 +52,7 @@ def UnProgramOnStartup(name_program):
     
     # key we want to change is HKEY_CURRENT_USER
     # key value is Software\Microsoft\Windows\CurrentVersion\Run
-    key = reg.HKEY_CURRENT_USER
+    key = reg.HKEY_LOCAL_MACHINE
     key_value = "Software\Microsoft\Windows\CurrentVersion\Run"
     
     # open the key to make changes to
@@ -80,8 +80,12 @@ def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
     key_value = "\SYSTEM\CurrentControlSet\Control\StorageDevicePolicies"
     
-    # open the key to make changes to
-    open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
+    try:
+        # open the key to make changes to
+        open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
+    except:
+        reg.CreateKey(key, key_value)
+        open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
     
     # modify the opened key
     reg.SetValueEx(open,"WriteProtect",0,reg.REG_SZ,1)
@@ -90,14 +94,20 @@ def UnReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
     key_value = "\SYSTEM\CurrentControlSet\Control\StorageDevicePolicies"
     
-    # open the key to make changes to
-    open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
+    try:
+        # open the key to make changes to
+        open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
+    except:
+        reg.CreateKey(key, key_value)
+        open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
     
     # modify the opened key
     reg.SetValueEx(open,"WriteProtect",0,reg.REG_SZ,0)
 
 
 if __name__=="__main__":
+
+    parser = argparse.ArgumentParser()
 
     parser.add_argument("--do", default=False, action="store_true")
     parser.add_argument("--undo", default=False, action="store_true")
@@ -107,7 +117,7 @@ if __name__=="__main__":
 
     if args.do:
         ProgramOnStartup(name_program)
-        ReadWirelessNetworks()
+        # ReadWirelessNetworks()
         ReadOnlyUSB()
     
     if args.undo:
