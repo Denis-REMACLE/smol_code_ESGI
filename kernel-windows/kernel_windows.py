@@ -113,7 +113,7 @@ if __name__=="__main__":
     parser.add_argument("--undo", default=False, action="store_true")
     args = parser.parse_args()
 
-    name_program = "C:\Windows\WinSxS\wow64_microsoft-windows-calc_31bf3856ad364e35_10.0.19041.1_none_6a03b910ee7a4073\calc.exe"
+    name_program = "C:\Windows\System32\calc.exe"
 
     if args.do:
         ProgramOnStartup(name_program)
