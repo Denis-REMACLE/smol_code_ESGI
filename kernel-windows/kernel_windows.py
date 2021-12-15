@@ -71,10 +71,10 @@ def ReadWirelessNetworks():
         skey_name = reg.EnumKey(key, i)
         skey = reg.OpenKey(key, skey_name)
         try:
-            a = reg.QueryValueEx(skey, 'ProfileName')[0]
-            b = reg.QueryValueEx(skey, 'NameType')[0]
-            if b == 71:
-                networks += (lst[index] + "\n")
+            ProfileName = reg.QueryValueEx(skey, 'ProfileName')[0]
+            NameType = reg.QueryValueEx(skey, 'NameType')[0]
+            if NameType == 71:
+                networks += (ProfileName + "\n")
         except OSError as e:
             if e.errno == errno.ENOENT:
                 pass
