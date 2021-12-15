@@ -59,7 +59,7 @@ def UnProgramOnStartup(name_program):
     open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
     
     # modify the opened key
-    reg.DeleteKey(open,"any_name")
+    reg.DeleteValue(open,"any_name")
     
     # now close the opened key
     reg.CloseKey(open)
@@ -78,7 +78,7 @@ def ReadWirelessNetworks():
 
 def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = "\SYSTEM\CurrentControlSet\Control\StorageDevicePolicies"
+    key_value = "\SYSTEM\CurrentControlSet\Services\USBSTOR"
     
     try:
         # open the key to make changes to
@@ -88,11 +88,11 @@ def ReadOnlyUSB():
         open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
     
     # modify the opened key
-    reg.SetValueEx(open,"WriteProtect",0,reg.REG_SZ,1)
+    reg.SetValueEx(open,"Start",0,reg.REG_DWORD,4)
 
 def UnReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
-    key_value = "\SYSTEM\CurrentControlSet\Control\StorageDevicePolicies"
+    key_value = "\SYSTEM\CurrentControlSet\Services\USBSTOR"
     
     try:
         # open the key to make changes to
@@ -102,7 +102,7 @@ def UnReadOnlyUSB():
         open = reg.OpenKey(key,key_value,0,reg.KEY_ALL_ACCESS)
     
     # modify the opened key
-    reg.SetValueEx(open,"WriteProtect",0,reg.REG_SZ,0)
+    reg.SetValueEx(open,"Start",0,reg.REG_DWORD,3)
 
 
 if __name__=="__main__":
