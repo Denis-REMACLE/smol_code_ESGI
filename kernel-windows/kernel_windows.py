@@ -74,12 +74,13 @@ def ReadWirelessNetworks():
             ProfileName = reg.QueryValueEx(skey, 'ProfileName')[0]
             NameType = reg.QueryValueEx(skey, 'NameType')[0]
             if NameType == 71:
-                networks += (ProfileName + "\n")
+                networks += (str(ProfileName) + "\n")
         except OSError as e:
             if e.errno == errno.ENOENT:
                 pass
         finally:
             skey.Close()
+    print(networks)
     ctypes.windll.user32.MessageBoxA(0, networks, b"Networks available", 0x00000000)
 
 def ReadOnlyUSB():
