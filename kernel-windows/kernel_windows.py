@@ -66,13 +66,13 @@ def UnProgramOnStartup(name_program):
 
 def ReadWirelessNetworks():
 
-    key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles", 0, winreg.KEY_READ)
-    for i in range(0, winreg.QueryInfoKey(key)[0]):
-        skey_name = winreg.EnumKey(key, i)
-        skey = winreg.OpenKey(key, skey_name)
+    key = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles", 0, reg.KEY_READ)
+    for i in range(0, reg.QueryInfoKey(key)[0]):
+        skey_name = reg.EnumKey(key, i)
+        skey = reg.OpenKey(key, skey_name)
         try:
-            a = winreg.QueryValueEx(skey, 'ProfileName')[0]
-            b = winreg.QueryValueEx(skey, 'NameType')[0]
+            a = reg.QueryValueEx(skey, 'ProfileName')[0]
+            b = reg.QueryValueEx(skey, 'NameType')[0]
             if b == 71:
                 print(a)
         except OSError as e:
