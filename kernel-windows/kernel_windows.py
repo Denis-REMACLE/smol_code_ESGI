@@ -81,7 +81,7 @@ def ReadWirelessNetworks():
         finally:
             skey.Close()
     print(networks)
-    ctypes.windll.user32.MessageBoxA(0, networks, b"Networks available", 0x00000000)
+    ctypes.windll.user32.MessageBoxA(0, bytes(networks), b"Networks available", 0x00000000)
 
 def ReadOnlyUSB():
     key = reg.HKEY_LOCAL_MACHINE
